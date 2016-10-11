@@ -1,5 +1,5 @@
 package com.osori.hyson;
 
-public class hySON
-{
+public class hySON {
+
 }
