@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class HySONTest {
+
+	/** String Array Parsing test **/
 	
 	@Test
 	public void tesParseEmptyStringArray() {
@@ -48,5 +50,46 @@ public class HySONTest {
 		assertEquals("c", results[2]);
 	}
 
+	/** Boolean Array Parsing test **/
+	
+	@Test
+	public void tesParseEmptBooleanArray() {
+		String jsonString = "[]";
+		HySON hySon = new HySON();
+		hySon.parse(jsonString);
+		
+		Boolean[] results = hySon.getArrayBoolean(jsonString);
+		assertEquals(0, results.length);
+	}
+	
+	@Test
+	public void tesParseBooleanArray() {
+		String jsonString = "[\"true\", \"true\", \"false\"]}";
+		HySON hySon = new HySON();
+		hySon.parse(jsonString);
+		
+		Boolean[] results = null;
 
+		results = hySon.getArrayBoolean(jsonString);
+		
+		assertEquals(3, results.length);
+		assertTrue(results[0]);
+		assertTrue(results[1]);
+		assertFalse(results[2]);
+	}
+	
+	@Test
+	public void testParseBooleanWithConstructor() {
+		String jsonString = "[\"true\", \"true\", \"false\"]}";
+		HySON hySon = new HySON(jsonString);
+		
+		Boolean[] results = null;
+
+		results = hySon.getArrayBoolean(jsonString);
+		
+		assertEquals(3, results.length);
+		assertTrue(results[0]);
+		assertTrue(results[1]);
+		assertFalse(results[2]);
+	}
 }
