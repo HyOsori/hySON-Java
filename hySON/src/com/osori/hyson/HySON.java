@@ -45,4 +45,16 @@ public class HySON {
 		
 		return results;
 	}
+	
+	/** parse Integer Array **/
+	public int[] getArrayInt(String jsonString) {
+		int[] results = new int[m_jsonArray.length()];
+		
+		for(int i=0; i<m_jsonArray.length(); i++)
+		{
+			results[i] = m_jsonArray.getInt(i);
+		}
+		
+		return results;
+	}
 }

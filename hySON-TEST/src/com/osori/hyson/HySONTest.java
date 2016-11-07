@@ -92,4 +92,46 @@ public class HySONTest {
 		assertTrue(results[1]);
 		assertFalse(results[2]);
 	}
+	
+	/** integer Array Parsing Test **/
+	@Test
+	public void testParseEmptIntArray() {
+		String jsonString = "[]";
+		HySON hySon = new HySON();
+		hySon.parse(jsonString);
+		
+		int[] results = hySon.getArrayInt(jsonString);
+		assertEquals(0, results.length);
+	}
+		
+	@Test
+	public void testParseIntArray() {
+		String jsonString = "[\"1\", \"2\", \"3\"]}";
+		HySON hySon = new HySON();
+		hySon.parse(jsonString);
+		
+		int[] results = null;
+
+		results = hySon.getArrayInt(jsonString);
+		
+		assertEquals(3, results.length);
+		assertEquals(1, results[0]);
+		assertEquals(2, results[1]);
+		assertEquals(3, results[2]);
+	}
+	
+	@Test
+	public void testParseIntWithConstructor() {
+		String jsonString = "[\"10\", \"20\", \"30\"]}";
+		HySON hySon = new HySON(jsonString);
+		
+		int[] results = null;
+
+		results = hySon.getArrayInt(jsonString);
+		
+		assertEquals(3, results.length);
+		assertEquals(10, results[0]);
+		assertEquals(20, results[1]);
+		assertEquals(30, results[2]);
+	}
 }
