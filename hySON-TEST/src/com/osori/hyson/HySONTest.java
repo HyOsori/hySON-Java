@@ -9,7 +9,7 @@ public class HySONTest {
 	/** String Array Parsing test **/
 	
 	@Test
-	public void tesParseEmptyStringArray() {
+	public void testParseEmptyStringArray() {
 		String jsonString = "[]";
 		HySON hySon = new HySON();
 		hySon.parse(jsonString);
@@ -19,7 +19,7 @@ public class HySONTest {
 	}
 	
 	@Test
-	public void tesParseStringArray() {
+	public void testParseStringArray() {
 		String jsonString = "[\"a\", \"b\", \"c\"]}";
 		HySON hySon = new HySON();
 		hySon.parse(jsonString);
@@ -34,7 +34,6 @@ public class HySONTest {
 		assertEquals("c", results[2]);
 	}
 	
-
 	@Test
 	public void testParseWithConstructor() {
 		String jsonString = "[\"a\", \"b\", \"c\"]}";
@@ -53,7 +52,7 @@ public class HySONTest {
 	/** Boolean Array Parsing test **/
 	
 	@Test
-	public void tesParseEmptBooleanArray() {
+	public void testParseEmptBooleanArray() {
 		String jsonString = "[]";
 		HySON hySon = new HySON();
 		hySon.parse(jsonString);
@@ -63,7 +62,7 @@ public class HySONTest {
 	}
 	
 	@Test
-	public void tesParseBooleanArray() {
+	public void testParseBooleanArray() {
 		String jsonString = "[\"true\", \"true\", \"false\"]}";
 		HySON hySon = new HySON();
 		hySon.parse(jsonString);
@@ -134,4 +133,75 @@ public class HySONTest {
 		assertEquals(20, results[1]);
 		assertEquals(30, results[2]);
 	}
+	
+	/* -- */	
+	public void test1(){
+		
+		HySON hyson = new HySON("{ \"value\" : 10 } ");
+		Temp t = hyson.parse(Temp.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test2(){
+		
+		HySON hyson = new HySON("{ \"object\" : { \"value\" : 10 } } ");
+		Temp t = hyson.parse("object", Temp.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test3(){
+		
+		HySON hyson = new HySON("{ \"temp\" : { \"value\" : 10 } } ");
+		Temp2 t = hyson.parse(Temp2.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test4(){
+		
+		public Object[] parseArray(Class class) {
+		}
+
+
+		HySON hyson = new HySON("[{\"value\": 0}]");
+		Temp[] t = hyson.parseArray(Temp.class);
+		//Temp[] t = (Temp[])hyson.parseArray(Temp.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test5(){
+
+		HySON hyson = new HySON("{\"temps\" :[{\"value\": 0}]}");
+		Temp3 t = hyson.parse(Temp3.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test6(){
+		
+		HySON hyson = new HySON("{\"member1\" : [ {\"temps\" :[{\"value\": 0}]}, {\"temps\" :[{\"value\": 1} ]}");
+		Temp4 t = hyson.parse(Temp4.class);
+		
+		assertEquals(10, t);
+		
+	}
+	
+	public void test7(){
+
+		HySON hyson = new HySON("{\"a\": 1, \"b\" : \"횟횟\", \"c\" : [2, 3, 4], \"d\": [5, 6], \"temps\":[{\"value\": 0}]}");
+		ManyMembers many = hyson.parse(ManyMembers.class);
+		
+		assertEquals(10, t);
+		
+	}
+
 }
+
