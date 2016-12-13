@@ -185,9 +185,9 @@ public class HySONTest {
 		
 		assertNotNull(t);
 		assertNotNull(t.temps);
-		assertEquals(t.temps.size(), 1);
-		assertNotNull(t.temps.get(0));
-		assertEquals(t.temps.get(0).value, 10);
+		assertEquals(t.temps.length, 1);
+		assertNotNull(t.temps[0]);
+		assertEquals(t.temps[0].value, 10);
 	}
 	
 	@Test
@@ -203,17 +203,17 @@ public class HySONTest {
 		assertNotNull(t.members.get(0).temps);
 		assertNotNull(t.members.get(1));
 		assertNotNull(t.members.get(1).temps);
-		assertEquals(t.members.get(0).temps.size(), 1);
-		assertEquals(t.members.get(1).temps.size(), 1);
-		assertNotNull(t.members.get(0).temps.get(0));
-		assertNotNull(t.members.get(1).temps.get(0));
-		assertEquals(t.members.get(0).temps.get(0).value, 0);
-		assertEquals(t.members.get(1).temps.get(0).value, 1);
+		assertEquals(t.members.get(0).temps.length, 1);
+		assertEquals(t.members.get(1).temps.length, 1);
+		assertNotNull(t.members.get(0).temps[0]);
+		assertNotNull(t.members.get(1).temps[0]);
+		assertEquals(t.members.get(0).temps[0].value, 0);
+		assertEquals(t.members.get(1).temps[0].value, 1);
 	}
 	
 	@Test
 	public void testParseMultMemberInObject() {
-		String jsonString = "{\"a\": 1, \"b\" : \"횟횟\", \"c\" : [2, 3, 4], \"d\": [5, 6], \"temps\":[{\"value\": 0}]}";
+		String jsonString = "{\"a\": 1, \"b\" : \"횟횟\", \"c\" : [2, 3, 4], \"d\": [5, 6], \"temps\":[{\"value\": 0}], \"date\": \"2016-11-27 00:00:00\"}";
 		HySON hyson = new HySON();
 		ManyMembers members = hyson.parse(jsonString, ManyMembers.class);
 		
@@ -221,18 +221,19 @@ public class HySONTest {
 		assertNotNull(members.c);
 		assertNotNull(members.d);
 		assertNotNull(members.temps);
-		assertEquals(members.a, 1);
+		assertEquals(members.a.intValue(), 1);
 		assertEquals(members.b, "횟횟");
 		assertEquals(members.c.size(), 3);
 		assertEquals(members.c.get(0).intValue(), 2);
 		assertEquals(members.c.get(1).intValue(), 3);
 		assertEquals(members.c.get(2).intValue(), 4);
 		assertEquals(members.d.length, 2);
-		assertEquals(members.d[0], 5);
-		assertEquals(members.d[1], 6);
+		assertEquals(members.d[0].intValue(), 5);
+		assertEquals(members.d[1].intValue(), 6);
 		assertEquals(members.temps.size(), 1);
 		assertNotNull(members.temps.get(0));
 		assertEquals(members.temps.get(0).value, 0);
+		System.out.println(members.date.getYear());
 	}
 }
 
