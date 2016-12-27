@@ -11,22 +11,20 @@ public class HySONTest {
 	@Test
 	public void tesParseEmptyStringArray() {
 		String jsonString = "[]";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
-		String[] results = hySon.getArrayString(jsonString);
+		String[] results = HySON.getArrayString(jsonString);
 		assertEquals(0, results.length);
 	}
 	
 	@Test
 	public void tesParseStringArray() {
 		String jsonString = "[\"a\", \"b\", \"c\"]}";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
 		String[] results = null;
 
-		results = hySon.getArrayString(jsonString);
+		results = HySON.getArrayString(jsonString);
 		
 		assertEquals(3, results.length);
 		assertEquals("a", results[0]);
@@ -38,11 +36,10 @@ public class HySONTest {
 	@Test
 	public void testParseWithConstructor() {
 		String jsonString = "[\"a\", \"b\", \"c\"]}";
-		HySON hySon = new HySON();
 		
 		String[] results = null;
 
-		results = hySon.getArrayString(jsonString);
+		results = HySON.getArrayString(jsonString);
 		
 		assertEquals(3, results.length);
 		assertEquals("a", results[0]);
@@ -55,22 +52,20 @@ public class HySONTest {
 	@Test
 	public void tesParseEmptBooleanArray() {
 		String jsonString = "[]";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
-		Boolean[] results = hySon.getArrayBoolean(jsonString);
+		Boolean[] results = HySON.getArrayBoolean(jsonString);
 		assertEquals(0, results.length);
 	}
 	
 	@Test
 	public void tesParseBooleanArray() {
 		String jsonString = "[\"true\", \"true\", \"false\"]}";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
 		Boolean[] results = null;
 
-		results = hySon.getArrayBoolean(jsonString);
+		results = HySON.getArrayBoolean(jsonString);
 		
 		assertEquals(3, results.length);
 		assertTrue(results[0]);
@@ -81,11 +76,10 @@ public class HySONTest {
 	@Test
 	public void testParseBooleanWithConstructor() {
 		String jsonString = "[\"true\", \"true\", \"false\"]}";
-		HySON hySon = new HySON();
-		
+
 		Boolean[] results = null;
 
-		results = hySon.getArrayBoolean(jsonString);
+		results = HySON.getArrayBoolean(jsonString);
 		
 		assertEquals(3, results.length);
 		assertTrue(results[0]);
@@ -97,22 +91,20 @@ public class HySONTest {
 	@Test
 	public void testParseEmptIntArray() {
 		String jsonString = "[]";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
-		int[] results = hySon.getArrayInt(jsonString);
+		int[] results = HySON.getArrayInt(jsonString);
 		assertEquals(0, results.length);
 	}
 		
 	@Test
 	public void testParseIntArray() {
 		String jsonString = "[\"1\", \"2\", \"3\"]}";
-		HySON hySon = new HySON();
-		hySon.parse(jsonString);
+		HySON.parse(jsonString);
 		
 		int[] results = null;
 
-		results = hySon.getArrayInt(jsonString);
+		results = HySON.getArrayInt(jsonString);
 		
 		assertEquals(3, results.length);
 		assertEquals(1, results[0]);
@@ -123,11 +115,10 @@ public class HySONTest {
 	@Test
 	public void testParseIntWithConstructor() {
 		String jsonString = "[\"10\", \"20\", \"30\"]}";
-		HySON hySon = new HySON();
 		
 		int[] results = null;
 
-		results = hySon.getArrayInt(jsonString);
+		results = HySON.getArrayInt(jsonString);
 		
 		assertEquals(3, results.length);
 		assertEquals(10, results[0]);
@@ -138,8 +129,7 @@ public class HySONTest {
 	@Test
 	public void testParseObject() {
 		String jsonString = "{ \"value\" : 10 } ";
-		HySON hyson = new HySON();
-		Temp1 t = hyson.parse(jsonString, Temp1.class);
+		Temp1 t = HySON.parse(jsonString, Temp1.class);
 		
 		assertNotNull(t);
 		assertEquals(t.value, 10);
@@ -148,8 +138,7 @@ public class HySONTest {
 	@Test
 	public void testParseObjectWithKey() {
 		String jsonString = "{\"object\": { \"value\" : 10 }} ";
-		HySON hyson = new HySON();
-		Temp1 t = hyson.parse(jsonString, "object", Temp1.class);
+		Temp1 t = HySON.parse(jsonString, "object", Temp1.class);
 		
 		assertNotNull(t);
 		assertEquals(t.value, 10);
@@ -158,8 +147,7 @@ public class HySONTest {
 	@Test
 	public void testParseObjectInObject() {
 		String jsonString = "{\"temp\": { \"value\" : 10 }} ";
-		HySON hyson = new HySON();
-		Temp2 t = hyson.parse(jsonString, Temp2.class);
+		Temp2 t = HySON.parse(jsonString, Temp2.class);
 		
 		assertNotNull(t);
 		assertNotNull(t.temp);
@@ -169,8 +157,7 @@ public class HySONTest {
 	@Test
 	public void testParseObjectArray() {
 		String jsonString = "[{ \"value\" : 10 }]";
-		HySON hyson = new HySON();
-		Temp1[] t = (Temp1[])hyson.parseArray(jsonString, Temp1.class);
+		Temp1[] t = (Temp1[])HySON.parseArray(jsonString, Temp1.class);
 		
 		assertNotNull(t);
 		assertEquals(t.length, 1);
@@ -181,8 +168,7 @@ public class HySONTest {
 	@Test
 	public void testParseArrayListInObject() {
 		String jsonString = "{\"temps\": [{ \"value\" : 10 }]}";
-		HySON hyson = new HySON();
-		Temp3 t = hyson.parse(jsonString, Temp3.class);
+		Temp3 t = HySON.parse(jsonString, Temp3.class);
 		
 		assertNotNull(t);
 		assertNotNull(t.temps);
@@ -194,8 +180,7 @@ public class HySONTest {
 	@Test
 	public void testParseMultiArrayListInObject() {
 		String jsonString = "{members: [{\"temps\": [{ \"value\" : 0 }]}, {\"temps\": [{ \"value\" : 1 }]}]}";
-		HySON hyson = new HySON();
-		Temp4 t = hyson.parse(jsonString, Temp4.class);
+		Temp4 t = HySON.parse(jsonString, Temp4.class);
 		
 		assertNotNull(t);
 		assertNotNull(t.members);
@@ -215,8 +200,7 @@ public class HySONTest {
 	@Test
 	public void testParseMultMemberInObject() {
 		String jsonString = "{\"a\": 1, \"b\" : \"횟횟\", \"c\" : [2, 3, 4], \"d\": [5, 6], \"temps\":[{\"value\": 0}], \"date\": \"2016-11-27 00:00:00\"}";
-		HySON hyson = new HySON();
-		ManyMembers members = hyson.parse(jsonString, ManyMembers.class);
+		ManyMembers members = HySON.parse(jsonString, ManyMembers.class);
 		
 		assertNotNull(members);
 		assertNotNull(members.c);
