@@ -1,5 +1,6 @@
 package com.osori.hyson;
 
-public class Temp1 {
+public class Test1Class
+{
 	public int value;
 }
