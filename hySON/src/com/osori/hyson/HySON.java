@@ -8,12 +8,11 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.osori.hyson.Member;
 
 public class HySON {
 	private JSONArray m_jsonArray = null;
@@ -75,30 +74,44 @@ public class HySON {
 			// make new object
 			obj = (T) constructor.newInstance();
 
-			for (Field field : fields) {
+			Iterator<String> keys = json.keys();
+			Field field;
+			String key;
+			
+			while (keys.hasNext()) {
+				key = keys.next();
+				
+				try {
+					field = c.getField(key);
+				} catch (NoSuchFieldException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+				
 				if (isJSONUnit(field.getType())) {
 					// TODO : Double -> float/Floa 예외처리, Double -> String 등도 수정해야함
 					if (field.getType() == float.class) {
-						field.set(obj, ((Double) json.get(field.getName())).floatValue());
+						field.set(obj, ((Double) json.get(key)).floatValue());
 					} else if (field.getType() == Float.class) {
-						field.set(obj, ((Double) json.get(field.getName())).floatValue());
+						field.set(obj, ((Double) json.get(key)).floatValue());
 					} else {
-						field.set(obj, json.get(field.getName()));
+						field.set(obj, json.get(key));
 						
 					}
 				} else if (field.getType() == java.util.Date.class) {
-					field.set(obj, stringToDate(json.getString(field.getName())));
+					field.set(obj, stringToDate(json.getString(key)));
 				} else if (field.getType().isArray()) {
-					field.set(obj, parseArray(json.optString(field.getName()), field.getType().getComponentType()));
+					field.set(obj, parseArray(json.optString(key), field.getType().getComponentType()));
 				} else if (field.getType() == ArrayList.class) {
 					if (field.getAnnotation(Member.class) != null) {
 						Member member = field.getAnnotation(Member.class);
-						field.set(obj, parseArrayList(jsonString, field.getName(), member.value()));
+						field.set(obj, parseArrayList(jsonString, key, member.value()));
 					} else {
 						field.set(obj, new ArrayList<>());
 					}
 				} else {
-					field.set(obj, parse(json.optString(field.getName()), field.getType()));
+					field.set(obj, parse(json.optString(key), field.getType()));
 				}
 			}
 
