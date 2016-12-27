@@ -77,7 +77,15 @@ public class HySON {
 
 			for (Field field : fields) {
 				if (isJSONUnit(field.getType())) {
-					field.set(obj, json.get(field.getName()));
+					// TODO : Double -> float/Floa 예외처리, Double -> String 등도 수정해야함
+					if (field.getType() == float.class) {
+						field.set(obj, ((Double) json.get(field.getName())).floatValue());
+					} else if (field.getType() == Float.class) {
+						field.set(obj, ((Double) json.get(field.getName())).floatValue());
+					} else {
+						field.set(obj, json.get(field.getName()));
+						
+					}
 				} else if (field.getType() == java.util.Date.class) {
 					field.set(obj, stringToDate(json.getString(field.getName())));
 				} else if (field.getType().isArray()) {
