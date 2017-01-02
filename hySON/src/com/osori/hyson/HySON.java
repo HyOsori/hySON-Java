@@ -4,10 +4,12 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONArray;
@@ -15,6 +17,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HySON {
+	private static final HashMap<Class, Class> primToWrap = new HashMap<Class, Class>() { 
+		{
+			put(byte.class, Byte.class);
+			put(short.class, Short.class);
+			put(int.class, Integer.class);
+			put(float.class, Float.class);
+			put(long.class, Long.class);
+			put(double.class, Double.class);
+			put(boolean.class, Boolean.class);
+			put(char.class, Character.class);
+		}
+	};
 
 	/** parse String Array **/
 	public static String[] getArrayString(String jsonString) {
@@ -85,14 +99,14 @@ public class HySON {
 
 				if (isJSONUnit(field.getType())) {
 					// TODO : Double -> float/Floa 예외처리, Double -> String 등도 수정해야함
-					if (field.getType() == float.class) {
-						field.set(obj, ((Double) json.get(key)).floatValue());
-					} else if (field.getType() == Float.class) {
-						field.set(obj, ((Double) json.get(key)).floatValue());
-					} else {
-						field.set(obj, json.get(key));
-
-					}
+//					if (field.getType() == float.class) {
+//						field.set(obj, ((Double) json.get(key)).floatValue());
+//					} else if (field.getType() == Float.class) {
+//						field.set(obj, ((Double) json.get(key)).floatValue());
+//					} else {
+//						field.set(obj, json.get(key));
+//					}
+					field.set(obj, stringToObject(field.getType(), (String)json.opt(key)));
 				} else if (field.getType() == java.util.Date.class) {
 					field.set(obj, stringToDate(json.getString(key)));
 				} else if (field.getType().isArray()) {
@@ -173,6 +187,32 @@ public class HySON {
 	private static boolean isJSONUnit(Class c) {
 		return c.isPrimitive() || c == Float.class || c == Integer.class || c == String.class || c == Double.class
 				|| c == Boolean.class || c == Character.class || c == Byte.class || c == Short.class || c == Long.class;
+	}
+	
+	private static Object stringToObject(Class fieldType, String value) {
+		if (fieldType.equals(String.class)) {
+			return value;
+		}
+		
+		Class c = fieldType;
+		Object result = null;
+		
+		if (fieldType.isPrimitive()) {
+			c = primToWrap.get(fieldType);
+		}
+		
+		try {
+			Class[] methodParamClass = new Class[] {String.class};
+			Method parser = c.getMethod("parse" + (c.equals(Integer.class) ? "Int" : c.getSimpleName()), methodParamClass);
+			
+			Object[] methodParamObject = new Object[] {value};
+			result = parser.invoke(c, methodParamObject);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	private static java.util.Date stringToDate(String dateStr) {
