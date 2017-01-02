@@ -106,7 +106,7 @@ public class HySON {
 //					} else {
 //						field.set(obj, json.get(key));
 //					}
-					field.set(obj, stringToObject(field.getType(), (String)json.opt(key)));
+					field.set(obj, stringToObject(field.getType(), json.optString(key)));
 				} else if (field.getType() == java.util.Date.class) {
 					field.set(obj, stringToDate(json.getString(key)));
 				} else if (field.getType().isArray()) {
