@@ -16,13 +16,6 @@ import org.json.JSONObject;
 
 public class HySON {
 
-	public HySON() {
-	}
-
-	/** set m_jsonArray without constructor **/	
-	public static void parse(String jsonString) {
-	}
-
 	/** parse String Array **/
 	public static String[] getArrayString(String jsonString) {
 		JSONArray m_jsonArray = new JSONArray(jsonString);
@@ -67,26 +60,29 @@ public class HySON {
 		try {
 			// get constructor
 			Constructor<?> constructor = c.getConstructor();
-			// get fields
-			Field[] fields = c.getFields();
+
 			// make new object
 			obj = (T) constructor.newInstance();
 
-			Iterator<String> keys = json.keys();
-			Field field;
-			String key;
+		} catch (NoSuchMethodException | SecurityException | 
+				InstantiationException | IllegalAccessException |
+				IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			
-			while (keys.hasNext()) {
-				key = keys.next();
-				
-				try {
-					field = c.getField(key);
-				} catch (NoSuchFieldException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					continue;
-				}
-				
+			return null;
+		}
+
+		Iterator<String> keys = json.keys();
+		Field field;
+		String key;
+
+		while (keys.hasNext()) {
+			key = keys.next();
+
+			try {
+				field = c.getField(key);
+
 				if (isJSONUnit(field.getType())) {
 					// TODO : Double -> float/Floa 예외처리, Double -> String 등도 수정해야함
 					if (field.getType() == float.class) {
@@ -95,7 +91,7 @@ public class HySON {
 						field.set(obj, ((Double) json.get(key)).floatValue());
 					} else {
 						field.set(obj, json.get(key));
-						
+
 					}
 				} else if (field.getType() == java.util.Date.class) {
 					field.set(obj, stringToDate(json.getString(key)));
@@ -111,26 +107,20 @@ public class HySON {
 				} else {
 					field.set(obj, parse(json.optString(key), field.getType()));
 				}
+				
+			} catch (NoSuchFieldException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("There is no field named " + key);
+				
+				continue;
+			} catch (IllegalArgumentException | IllegalAccessException | JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Parsing error at field named " + key);
+				
+				continue;
 			}
-
-		} catch (NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return obj;
@@ -179,16 +169,15 @@ public class HySON {
 
 		return array;
 	}
-	
+
 	private static boolean isJSONUnit(Class c) {
-		return c.isPrimitive() || c == Float.class || c == Integer.class || c == String.class
-				 || c == Double.class || c == Boolean.class || c == Character.class || c == Byte.class
-				 || c == Short.class || c == Long.class;
+		return c.isPrimitive() || c == Float.class || c == Integer.class || c == String.class || c == Double.class
+				|| c == Boolean.class || c == Character.class || c == Byte.class || c == Short.class || c == Long.class;
 	}
-	
+
 	private static java.util.Date stringToDate(String dateStr) {
 		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		try {
 			return format.parse(dateStr);
 		} catch (ParseException e) {
