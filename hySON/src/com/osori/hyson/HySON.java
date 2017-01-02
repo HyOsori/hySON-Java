@@ -15,19 +15,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HySON {
-	private JSONArray m_jsonArray = null;
 
 	public HySON() {
 	}
 
-	/** set m_jsonArray without constructor **/
-	public void parse(String jsonString) {
-		m_jsonArray = new JSONArray(jsonString);
+	/** set m_jsonArray without constructor **/	
+	public static void parse(String jsonString) {
 	}
 
 	/** parse String Array **/
-	public String[] getArrayString(String jsonString) {
-		parse(jsonString);
+	public static String[] getArrayString(String jsonString) {
+		JSONArray m_jsonArray = new JSONArray(jsonString);
 		String[] results = new String[m_jsonArray.length()];
 
 		for (int i = 0; i < m_jsonArray.length(); ++i) {
@@ -38,8 +36,8 @@ public class HySON {
 	}
 
 	/** parse Boolean Array **/
-	public Boolean[] getArrayBoolean(String jsonString) {
-		parse(jsonString);
+	public static Boolean[] getArrayBoolean(String jsonString) {
+		JSONArray m_jsonArray = new JSONArray(jsonString);
 		Boolean[] results = new Boolean[m_jsonArray.length()];
 
 		for (int i = 0; i < m_jsonArray.length(); ++i) {
@@ -50,8 +48,8 @@ public class HySON {
 	}
 
 	/** parse Integer Array **/
-	public int[] getArrayInt(String jsonString) {
-		parse(jsonString);
+	public static int[] getArrayInt(String jsonString) {
+		JSONArray m_jsonArray = new JSONArray(jsonString);
 		int[] results = new int[m_jsonArray.length()];
 
 		for (int i = 0; i < m_jsonArray.length(); i++) {
