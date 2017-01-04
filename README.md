@@ -2,6 +2,12 @@
 ## 목표
 * JSON은 서버와 통신할 때 가장 많이 사용하는 포맷이다. 사용시 매번 귀찮은 파싱과정을 거쳐야 한다. 대안인 gSON은 Generic Type을 지원하지 않는다. JSON을 Class instance로 쉽게 생성하는 것이 hySON의 목표이다.
 
+## 시연 영상 
+https://youtu.be/lPsqKIGiBmU
+
+## 슬라이드쉐어 
+http://www.slideshare.net/OsoriHanyang/hyson-d2fest
+
 ## 사용법
 * JSON의 key값과 동일 field명을 갖는 class를 작성한다.
 * HySON.parse(jsogString, 맵핑될클래스.class) 메소드를 호출하면 끝!
@@ -44,6 +50,9 @@ public class Test7Class
 * ~~Inner class는 생성되지 않음(Outer class의 instance 필요)~~
 * Generic Type은 ArrayList만 지원(List, HashMap 등 지원 예정)
 * "key":3.0 을 int field에 저장하면 에러, 타입 변환 기능
+
+## 활용 라이브러리 
+JSONParser 	https://github.com/douglascrockford/JSON-java
 
 ## License
 ```
