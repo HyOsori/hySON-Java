@@ -32,11 +32,24 @@ public class HySON {
 
 	/** parse Custom Object **/
 	public static <T extends Object> T parse(String jsonString, Class c) {
-		T obj = null;
 		JSONObject json = null;
 
 		try {
 			json = new JSONObject(jsonString);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return null;
+		}
+
+		return parse(json, c);
+	}
+
+	private static <T extends Object> T parse(JSONObject json, Class c) {
+		T obj = null;
+
+		try {
 			// get constructor
 			Constructor<?> constructor = c.getConstructor();
 
@@ -45,8 +58,7 @@ public class HySON {
 
 		} catch (NoSuchMethodException | SecurityException | 
 				InstantiationException | IllegalAccessException |
-				IllegalArgumentException | InvocationTargetException |
-				JSONException e) {
+				IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
@@ -72,7 +84,7 @@ public class HySON {
 				} else if (field.getType() == ArrayList.class) {
 					if (field.getAnnotation(Member.class) != null) {
 						Member member = field.getAnnotation(Member.class);
-						field.set(obj, parseArrayList(jsonString, key, member.value()));
+						field.set(obj, parseArrayList(json.optString(key), member.value()));
 					} else {
 						field.set(obj, new ArrayList<>());
 					}
@@ -82,13 +94,13 @@ public class HySON {
 				
 			} catch (NoSuchFieldException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 				System.out.println("There is no field named " + key);
 				
 				continue;
 			} catch (IllegalArgumentException | IllegalAccessException | JSONException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 				System.out.println("Parsing error at field named " + key);
 				
 				continue;
@@ -106,35 +118,31 @@ public class HySON {
 		} catch (JSONException e) {
 			return null;
 		}
+		
+		return parse(json, key, c);
+	}
 
-		jsonString = json.optString(key);
-
-		return parse(jsonString, c);
+	private <T> T parse(JSONObject json, String key, Class c) {
+		return parse(json.getJSONObject(key), c);
 	}
 
 	/** parse Custom Object Array **/
-	private static Object parseArray(String jsonString, Class c) {
-		JSONArray m_jsonArray = null;
+	public static Object parseArray(String jsonString, Class c) {
+		JSONArray jsonArray = null;
 
 		try {
-			m_jsonArray = new JSONArray(jsonString);
+			jsonArray = new JSONArray(jsonString);
 		} catch (JSONException e) {
 			return null;
 		}
 
-		Object array = Array.newInstance(c, m_jsonArray.length());
+		Object array = Array.newInstance(c, jsonArray.length());
 
-		for (int i = 0; i < m_jsonArray.length(); i++) {
-			Object elementObject = parse(m_jsonArray.optString(i), c);
-			if (elementObject != null)
-				Array.set(array, i, elementObject);
-			else {
-				try {
-					elementObject = m_jsonArray.get(i);
-					Array.set(array, i, elementObject);
-				} catch (JSONException e) {
-					Array.set(array, i, null);
-				}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			try {
+				Array.set(array, i, parse(jsonArray.getJSONObject(i), c));
+			} catch (JSONException e) {
+				Array.set(array, i, jsonArray.get(i));
 			}
 		}
 
@@ -142,35 +150,23 @@ public class HySON {
 	}
 
 	/** parse Custom Object ArrayList **/
-	private static <T> ArrayList<T> parseArrayList(String jsonString, String key, Class c) {
-		JSONObject json = null;
+	public static <T> ArrayList<T> parseArrayList(String jsonString, Class c) {
+		JSONArray jsonArray = null;
+		
 		try {
-			json = new JSONObject(jsonString);
+			jsonArray = new JSONArray(jsonString);
 		} catch (JSONException e) {
 			return null;
 		}
-		jsonString = json.optString(key);
-
-		JSONArray m_jsonArray = null;
-		try {
-			m_jsonArray = new JSONArray(jsonString);
-		} catch (JSONException e) {
-			return null;
-		}
+		
 		ArrayList<T> array = new ArrayList<>();
 
-		for (int i = 0; i < m_jsonArray.length(); i++) {
-
-			T elementObject = parse(m_jsonArray.optString(i), c);
-			if (elementObject != null)
-				array.add(elementObject);
-			else
-				try {
-					elementObject = (T)m_jsonArray.get(i);
-					array.add(elementObject);
-				} catch (JSONException e) {
-					array.add(null);
-				}
+		for (int i = 0; i < jsonArray.length(); i++) {
+			try {
+				array.add(parse(jsonArray.getJSONObject(i), c));
+			} catch (JSONException e) {
+				array.add((T) jsonArray.get(i));
+			}
 		}
 
 		return array;
